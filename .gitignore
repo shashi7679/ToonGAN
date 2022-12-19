@@ -1,0 +1,10 @@
+__pycache__/*
+evaluation/*
+wandb/*
+disc.pth.tar
+gen.pth.tar
+generator.pt
+loss.png
+original.png
+toon.png
+temp.py
