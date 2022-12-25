@@ -8,6 +8,7 @@ import torchvision.transforms as transforms
 from torchvision.utils import save_image
 import albumentations as A
 from albumentations.pytorch import ToTensorV2
+from utils import check_cords
 
 ############## Augmentations ###############
 both_transform = A.Compose(
@@ -59,6 +60,8 @@ class Face_Toon_Dataset(Dataset):
             original_image = np.asarray(Image.open(original_image_path).convert('RGB'))
             toon_image = np.asarray(Image.open(toon_image_path).convert('RGB'))
 
+            # print(original_image.shape, toon_image.shape)
+
             ############################ Extracting Faces from Images ###################
             detections = config.DETECTOR.detect(original_image)
             xmin, ymin, xmax, ymax, c = detections[0]
@@ -66,6 +69,9 @@ class Face_Toon_Dataset(Dataset):
             width = xmax-xmin
                     #------ To add forehead and chin uisng height and extend width in order to fit the full face -------#
             xmin_mod_1, ymin_mod_1, xmax_mod_1, ymax_mod_1 = int(xmin - width/6), int(ymin - height/4), int(xmax + width/6), int(ymax + width/15)
+                    #------ Checking Cordinates to keep it within valid ranges [0,480] ------#
+            xmin_mod_1, ymin_mod_1, xmax_mod_1, ymax_mod_1 = check_cords(xmin_mod_1, ymin_mod_1, xmax_mod_1, ymax_mod_1)
+            
             real_face_image = original_image[ymin_mod_1:ymax_mod_1, xmin_mod_1:xmax_mod_1]
             toon_face_image = toon_image[ymin_mod_1:ymax_mod_1, xmin_mod_1:xmax_mod_1]
 
@@ -93,7 +99,6 @@ class Test_Faces(Dataset):
         self.n_samples = list_files
         self.transform = transform
          
-    
     def __len__(self):
         return len(self.n_samples)
     
