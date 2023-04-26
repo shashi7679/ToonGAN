@@ -1,0 +1,11 @@
+evaluation/*
+saved_models/*
+__pycache__/*
+cropped_images/*
+face_parsed_results/*
+pix2pix_data/*
+test_results/*
+toon_pix_data/*
+wandb/*
+disc.pt
+gen.pt
